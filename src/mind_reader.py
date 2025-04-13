@@ -16,17 +16,28 @@ def get_center(width, height):
 def validate_input(P):
   return P == "" or str.isdigit(P) and int(P) >= 1 and int(P) <= 10
 
+def on_closing(window):
+    button.config(state=tk.NORMAL)
+    window.destroy()
+
 def read_mind():
     if entry.get() == "":
         return
-    if result_window is not None:
-        result_window.destroy()
+    
+    try:
+        if result_window.winfo_exists():
+            result_window.destroy()
+    except:
+        pass
+
     button.config(state=tk.DISABLED)
 
     window = tk.Tk()
     window.title("Reading your mind")
     window.resizable(False, False)
     window.geometry(f"{width}x{140}+{x}+{y}")
+    window.attributes("-topmost", True)
+    window.protocol("WM_DELETE_WINDOW", lambda:on_closing(window))
 
     label = ttk.Label(window, text=progress_text[0])
     label.pack(pady=40)
@@ -62,6 +73,7 @@ def display_result():
     result_window = window
 
 result_window = None
+
 window = tk.Tk()
 window.title("Mind Reader")
 window.resizable(False, False)
